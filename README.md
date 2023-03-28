@@ -1,4 +1,4 @@
-# liam-griffiths-IS24-full-stack-competition-req97073
+# Liam Griffiths - Full Stack Submission
 BC Gov Code Test
 
 ## Getting Started
