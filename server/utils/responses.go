@@ -1,11 +1,10 @@
-package responses
+package utils
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-// return error message
 func Error(w http.ResponseWriter, status int, msg string) {
 	JSON(w, status, map[string]string{"message": msg})
 }

@@ -1,23 +1,24 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	responses "server/utils"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"log"
+	"net/http"
+	"server/handlers"
+	"server/utils"
 )
 
 func main() {
 	log.Println("Starting Server...")
-	// Create our router
-	r := chi.NewRouter()
 
-	// Middlewares
-	r.Use(middleware.Logger)
-	r.Use(cors.Handler(cors.Options{
+	// Create our router
+	router := chi.NewRouter()
+
+	// Setup our middlewares
+	router.Use(middleware.Logger) // Logs API interactions
+	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -26,13 +27,31 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Routes
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		responses.Text(w, 200, "Alive!")
+	// Alive check.
+	router.Get("/api", func(w http.ResponseWriter, r *http.Request) {
+		utils.Text(w, 200, "Alive!")
 	})
 
-	// Serve!
-	port := ":3000"
-	log.Println("Listening on", port)
-	log.Fatal(http.ListenAndServe(port, r))
+	// Swagger docs.
+	router.Get("/api/api-docs", func(w http.ResponseWriter, r *http.Request) {
+		utils.Text(w, 200, "Swagger goes here!")
+	})
+
+	// Products routes
+	router.Route("/api/products", func(r chi.Router) {
+
+		r.Get("/", handlers.GetAllProducts) // GET /products - all products
+		r.Post("/", handlers.CreateProduct) // POST /products - new product
+
+		r.Route("/{productID}", func(r chi.Router) {
+			r.Get("/", handlers.GetProduct)       // GET /products/123
+			r.Put("/", handlers.UpdateProduct)    // PUT /products/123
+			r.Delete("/", handlers.DeleteProduct) // DELETE /products/123
+		})
+	})
+
+	// Serve and log!
+	listenOn := ":3001"
+	log.Println("Listening on", listenOn)
+	log.Fatal(http.ListenAndServe(listenOn, router))
 }
