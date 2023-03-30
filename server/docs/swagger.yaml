@@ -1,0 +1,71 @@
+info:
+  contact:
+    email: me@liam-griffiths.co.uk
+    name: Liam Griffiths
+  title: IWB Submission API
+  version: "1.0"
+paths:
+  /api:
+    get:
+      description: Will respond I'm Alive! if the API is up.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Health Check
+  /api/api-docs:
+    get:
+      description: Swagger docs.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Swagger docs.
+  /api/products/{id}:
+    delete:
+      description: Will respond I'm Alive! if the API is up.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete product
+    get:
+      description: Will respond I'm Alive! if the API is up.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete product
+    post:
+      description: Will respond I'm Alive! if the API is up.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete product
+    put:
+      description: Will respond I'm Alive! if the API is up.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete product
+swagger: "2.0"

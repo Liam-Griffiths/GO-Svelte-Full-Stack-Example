@@ -19,3 +19,8 @@ func JSON(w http.ResponseWriter, status int, payload interface{}) {
 	w.WriteHeader(status)
 	w.Write(response)
 }
+
+func Redirect(w http.ResponseWriter, location string) {
+	w.Header().Set("Location", location)
+	w.WriteHeader(302)
+}

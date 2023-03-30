@@ -6,10 +6,14 @@ import (
 	"github.com/go-chi/cors"
 	"log"
 	"net/http"
+	_ "server/docs"
 	"server/handlers"
-	"server/utils"
 )
 
+// @title IWB Submission API
+// @version 1.0
+// @contact.name   Liam Griffiths
+// @contact.email  me@liam-griffiths.co.uk
 func main() {
 	log.Println("Starting Server...")
 
@@ -27,31 +31,26 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Alive check.
-	router.Get("/api", func(w http.ResponseWriter, r *http.Request) {
-		utils.Text(w, 200, "Alive!")
-	})
-
-	// Swagger docs.
-	router.Get("/api/api-docs", func(w http.ResponseWriter, r *http.Request) {
-		utils.Text(w, 200, "Swagger goes here!")
-	})
+	// Base routes
+	router.Get("/api", handlers.Health())
+	router.Get("/api/api-docs/*", handlers.SwaggerDocs())
+	router.Get("/api/api-docs", handlers.SwaggerDocsRedirect())
 
 	// Products routes
 	router.Route("/api/products", func(r chi.Router) {
 
-		r.Get("/", handlers.GetAllProducts) // GET /products - all products
-		r.Post("/", handlers.CreateProduct) // POST /products - new product
+		r.Get("/", handlers.GetAllProducts) // GET /api/products - all products
+		r.Post("/", handlers.CreateProduct) // POST /api/products - new product
 
 		r.Route("/{productID}", func(r chi.Router) {
-			r.Get("/", handlers.GetProduct)       // GET /products/123
-			r.Put("/", handlers.UpdateProduct)    // PUT /products/123
-			r.Delete("/", handlers.DeleteProduct) // DELETE /products/123
+			r.Get("/", handlers.GetProduct)       // GET /api/products/123
+			r.Put("/", handlers.UpdateProduct)    // PUT /api/products/123
+			r.Delete("/", handlers.DeleteProduct) // DELETE /api/products/123
 		})
 	})
 
 	// Serve and log!
-	listenOn := ":3001"
+	listenOn := ":3000"
 	log.Println("Listening on", listenOn)
 	log.Fatal(http.ListenAndServe(listenOn, router))
 }
