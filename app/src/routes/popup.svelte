@@ -1,6 +1,8 @@
 <script lang="ts">
     import type {Product} from "../helpers/api";
     import {CreateProduct, DeleteProduct, UpdateProduct} from "../helpers/api";
+    import {getContext} from "svelte";
+    const { close } = getContext('simple-modal');
 
     export let product: Product = {
         Developers: [],
@@ -15,7 +17,7 @@
 
     export let fetchFunc;
     export let isNew: Boolean = false;
-    const handleSubmit = async e => {
+    const handleSubmit = e => {
 
         // getting the action url
         const ACTION_URL = e.target.action
@@ -23,7 +25,19 @@
         // get the form fields data and convert it to URLSearchParams
         const formData = new FormData(e.target)
 
-        const data = product
+
+        const data = product;
+
+        if (action === 3) {
+            (async function() {
+                await DeleteProduct(data);
+                await fetchFunc();
+                close();
+                return;
+            })();
+
+        }
+
         for (let field of formData) {
             let [key, value] = field
             if (key === "Developers") {
@@ -40,18 +54,21 @@
         console.log(data)
 
         if (action === 1) {
-            await CreateProduct(data);
-            await fetchFunc();
+            (async function() {
+                await CreateProduct(data);
+                await fetchFunc();
+                close();
+                return;
+            })();
         }
 
         if (action === 2) {
-            await UpdateProduct(data);
-            await fetchFunc();
-        }
-
-        if (action === 3) {
-            await DeleteProduct(data);
-            await fetchFunc();
+            (async function() {
+                await UpdateProduct(data);
+                await fetchFunc();
+                close();
+                return;
+            })();
         }
 
     }
@@ -84,22 +101,22 @@
                 </div>
                 <div class="sm:col-span-2">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Developers</label>
-                    <input type="text" name="Developers" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{isNew === true ? '' :product.Developers.join()}">
+                    <input type="text" name="Developers" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{isNew === true ? '' : (product.Developers?.length ? product.Developers.join(", ") : '') }">
                 </div>
             </div>
 
             <div class="flex items-center space-x-4">
                 {#if isNew}
-                    <button type="submit" on:click={()=>{action = 1}} on:submit|preventDefault={handleSubmit} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button on:click={() => {action = 1}} type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Create product
                     </button>
                 {:else}
-                    <button type="submit" on:click={()=>{action = 2}} on:submit|preventDefault={handleSubmit} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button on:click={() => {action = 2}} type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Update product
                     </button>
                 {/if}
                 {#if !isNew}
-                    <button type="button" on:click={()=>{action = 3}} on:submit|preventDefault={handleSubmit} class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                    <button on:click={() => {action = 3}} type="submit" class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                         <svg class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
                         Delete
                     </button>
