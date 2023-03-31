@@ -94,3 +94,59 @@ export async function CreateProduct(newProduct: Product) {
         }
     }
 }
+
+export async function UpdateProduct(newProduct: Product) {
+    try {
+
+        const { data, status } = await axios.put<Product>(
+            API_URL + '/api/products/' + newProduct.ProductID,
+            newProduct,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
+
+        toast.push("Product successfully updated")
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('error message: ', error.message);
+            toast.push(error.message)
+            return error.message;
+        } else {
+            console.log('unexpected error: ', error);
+            return 'An unexpected error occurred';
+        }
+    }
+}
+
+export async function DeleteProduct(newProduct: Product) {
+    try {
+
+        const { data, status } = await axios.delete<Product>(
+            API_URL + '/api/products/' + newProduct.ProductID,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            },
+        );
+
+        toast.push("Product successfully deleted")
+        return data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('error message: ', error.message);
+            toast.push(error.message)
+            return error.message;
+        } else {
+            console.log('unexpected error: ', error);
+            return 'An unexpected error occurred';
+        }
+    }
+}
+
