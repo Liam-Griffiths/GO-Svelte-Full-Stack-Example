@@ -14,7 +14,7 @@
     let sortOrder = 1;
 
     const modal = writable(null);
-    const showModal = (product: Product, isNew = false) => modal.set(bind(Popup, { product: product, isNew: isNew }));
+    const showModal = (product: Product, isNew = false) => modal.set(bind(Popup, { product: product, isNew: isNew, fetchFunc: FetchProducts }));
 
     onMount(async () => {
         await Health()
@@ -22,6 +22,10 @@
         productsCopy = [...products];
         isLoading = false;
     });
+
+    async function FetchProducts() {
+        products = await GetProducts();
+    }
 
     const truncate = (str, length) => {
         if (length == null) {
@@ -160,7 +164,7 @@
                                 {product.ProductOwnerName}
                             </td>
                             <td class="px-6 py-4">
-                                {truncate(product.Developers.join(", "), 100)}
+                                {product.Developers?.length ? product.Developers.join(", ") : '' }
                             </td>
                             <td class="px-6 py-4">
                                 {product.ScrumMasterName}

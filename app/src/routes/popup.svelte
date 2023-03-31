@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {Product} from "../helpers/api";
-    import {CreateProduct, DeleteProduct, U, UpdateProduct} from "../helpers/api";
+    import {CreateProduct, DeleteProduct, UpdateProduct} from "../helpers/api";
 
     export let product: Product = {
         Developers: [],
@@ -11,9 +11,12 @@
         ScrumMasterName: "",
         StartDate: undefined
     };
+    let action = 0;
 
+    export let fetchFunc;
     export let isNew: Boolean = false;
-    const handleSubmit = (e,action) => {
+    const handleSubmit = async e => {
+
         // getting the action url
         const ACTION_URL = e.target.action
 
@@ -23,34 +26,41 @@
         const data = product
         for (let field of formData) {
             let [key, value] = field
-            if(key === "Developers"){
+            if (key === "Developers") {
                 value = value.split(',');
                 break;
             }
-            if(key === "StartDate"){
+            if (key === "StartDate") {
                 value = new Date(value).toDateString()
                 break;
             }
-            data[key]=value;
+            data[key] = value;
 
-        }console.log(data)
+        }
+        console.log(data)
 
-        if(action === 1){
-            CreateProduct(data)
+        if (action === 1) {
+            await CreateProduct(data);
+            await fetchFunc();
         }
-        if(action === 2){
-            UpdateProduct(data)
+
+        if (action === 2) {
+            await UpdateProduct(data);
+            await fetchFunc();
         }
-        if(action === 2){
-            DeleteProduct(data)
+
+        if (action === 3) {
+            await DeleteProduct(data);
+            await fetchFunc();
         }
+
     }
 </script>
 
 <section class="bg-white dark:bg-gray-900">
     <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Update product</h2>
-        <form action="#" on:submit|preventDefault={handleSubmit(e,1)}>
+        <form action="#" on:submit|preventDefault={handleSubmit}>
             <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                 <div class="sm:col-span-2">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
@@ -80,16 +90,16 @@
 
             <div class="flex items-center space-x-4">
                 {#if isNew}
-                    <button type="submit" on:submit|preventDefault={handleSubmit(e,1)} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button type="submit" on:click={()=>{action = 1}} on:submit|preventDefault={handleSubmit} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Create product
                     </button>
                 {:else}
-                    <button type="submit" on:submit|preventDefault={handleSubmit(e,2)} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button type="submit" on:click={()=>{action = 2}} on:submit|preventDefault={handleSubmit} class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Update product
                     </button>
                 {/if}
                 {#if !isNew}
-                    <button type="button" on:submit|preventDefault={handleSubmit(e,3)} class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                    <button type="button" on:click={()=>{action = 3}} on:submit|preventDefault={handleSubmit} class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                         <svg class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
                         Delete
                     </button>

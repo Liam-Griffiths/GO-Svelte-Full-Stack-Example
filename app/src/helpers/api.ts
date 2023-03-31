@@ -98,7 +98,7 @@ export async function CreateProduct(newProduct: Product) {
 export async function UpdateProduct(newProduct: Product) {
     try {
 
-        const { data, status } = await axios.put<Product>(
+        const { data, status } = await axios.put(
             API_URL + '/api/products/' + newProduct.ProductID,
             newProduct,
             {
@@ -126,7 +126,7 @@ export async function UpdateProduct(newProduct: Product) {
 export async function DeleteProduct(newProduct: Product) {
     try {
 
-        const { data, status } = await axios.delete<Product>(
+        const { data, status } = await axios.delete(
             API_URL + '/api/products/' + newProduct.ProductID,
             {
                 headers: {
