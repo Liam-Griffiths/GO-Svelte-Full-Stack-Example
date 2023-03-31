@@ -2,7 +2,11 @@
 BC Gov Code Test
 
 ## Getting Started
-- TBD
+- Frontend:
+  -- cd app, npm i, npm run dev
+
+- Backend:
+  -- cd server, docker compose up
 
 ## Stack Chosen
 ### Frontend
