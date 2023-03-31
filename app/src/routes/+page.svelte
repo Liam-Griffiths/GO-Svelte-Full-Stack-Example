@@ -92,7 +92,7 @@
                                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="text" on:input={(e) => doSearch()} bind:value={term} id="simple-search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                            <input type="text" on:input={(e) => {products = productsCopy; doSearch()}} bind:value={term} id="simple-search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
                         </div>
                     </form>
                 </div>
@@ -113,15 +113,15 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("ProductID"))}}>Product ID</a>
                 </th>
 
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("ProductName"))}}>Product Name</a>
                 </th>
 
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("ProductOwnerName"))}}>Product Owner</a>
                 </th>
 
@@ -129,15 +129,15 @@
                     Developers
                 </th>
 
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("ScrumMasterName"))}}>Scrum Master</a>
                 </th>
 
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("StartDate"))}}>Start Date</a>
                 </th>
 
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 hover:underline">
                     <a on:click={() => {products = products.sort(dynamicSort("Methodology"))}}>Methodology</a>
                 </th>
 
