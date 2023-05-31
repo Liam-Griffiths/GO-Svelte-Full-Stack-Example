@@ -1,5 +1,4 @@
-# Liam Griffiths - Full Stack Submission
-BC Gov Code Test
+# Full Stack Go + Svelte Example Project
 
 ## Getting Started
 - Frontend:
